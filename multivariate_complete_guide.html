@@ -1,0 +1,1859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multivariate Analysis — Complete Study Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --ink: #1a1410;
+    --paper: #fdf8f0;
+    --cream: #f5ede0;
+    --accent: #8b2635;
+    --gold: #c9973a;
+    --teal: #2a6b6b;
+    --blue: #2b4a8b;
+    --purple: #5a2d82;
+    --green: #1e5e3a;
+    --border: #d4c4a8;
+    --note-bg: #fffbf0;
+    --formula-bg: #f0f4ff;
+    --example-bg: #f0faf5;
+    --shadow: rgba(139,38,53,0.10);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.8;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      45deg, transparent, transparent 40px,
+      rgba(201,151,58,0.06) 40px, rgba(201,151,58,0.06) 41px
+    );
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    letter-spacing: -1px;
+    position: relative;
+  }
+  header p {
+    font-family: 'Source Serif 4', serif;
+    font-size: 1rem;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+    position: relative;
+  }
+  header .subtitle {
+    color: #aaa;
+    font-size: 0.88rem;
+    letter-spacing: 1px;
+    margin-top: 0.3rem;
+    position: relative;
+  }
+
+  /* ── TOC ── */
+  nav.toc {
+    background: var(--cream);
+    border-bottom: 2px solid var(--border);
+    padding: 2rem;
+  }
+  nav.toc h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.5rem;
+  }
+  nav.toc .toc-group { margin-bottom: 1rem; }
+  nav.toc .toc-group-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.3rem;
+    padding-bottom: 0.2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  nav.toc ol {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.25rem 2rem;
+    padding-left: 1.2rem;
+  }
+  nav.toc li a {
+    color: var(--blue);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+  nav.toc li a:hover { color: var(--accent); text-decoration: underline; }
+
+  /* ── CHAPTER DIVIDER ── */
+  .chapter-banner {
+    background: var(--ink);
+    color: var(--gold);
+    padding: 0.8rem 2rem;
+    margin: 3rem 0 0 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 4rem;
+  }
+
+  /* ── SECTION ── */
+  section.unit {
+    margin-bottom: 3.5rem;
+    border-left: 4px solid var(--border);
+    padding-left: 1.5rem;
+    transition: border-color 0.3s;
+  }
+  section.unit:hover { border-color: var(--gold); }
+
+  .unit-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .unit-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--border);
+    line-height: 1;
+    min-width: 2.8rem;
+  }
+  .unit-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  /* ── CONTENT BLOCKS ── */
+  .block {
+    margin-bottom: 1.4rem;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .block-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 0.45rem 1rem;
+  }
+  .block-body {
+    padding: 1rem 1.2rem;
+    font-size: 0.97rem;
+    line-height: 1.85;
+  }
+
+  .block-notes .block-label { background: var(--ink); color: var(--gold); }
+  .block-notes .block-body  { background: var(--note-bg); border: 1px solid #e0d4b8; border-top: none; }
+
+  .block-explain .block-label { background: var(--teal); color: #fff; }
+  .block-explain .block-body  { background: var(--example-bg); border: 1px solid #b8ddd0; border-top: none; }
+
+  .block-formula .block-label { background: var(--blue); color: #fff; }
+  .block-formula .block-body  { background: var(--formula-bg); border: 1px solid #c0ccee; border-top: none; }
+
+  .block-example .block-label { background: var(--gold); color: var(--ink); }
+  .block-example .block-body  { background: #fffbf2; border: 1px solid #e8d8a0; border-top: none; }
+
+  .block-prop .block-label { background: var(--accent); color: #fff; }
+  .block-prop .block-body  { background: #fff5f5; border: 1px solid #f0c8c8; border-top: none; }
+
+  .block-viz .block-label { background: var(--purple); color: #fff; }
+  .block-viz .block-body  { background: #f8f4ff; border: 1px solid #d4c0f0; border-top: none; }
+
+  .block-problem .block-label { background: var(--green); color: #fff; }
+  .block-problem .block-body  { background: #f2fff7; border: 1px solid #a8e0c0; border-top: none; }
+
+  /* ── MATH ── */
+  .math {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(43,74,139,0.07);
+    border-radius: 3px;
+    padding: 0.05em 0.35em;
+    font-size: 0.92em;
+  }
+  .math-block {
+    font-family: 'JetBrains Mono', monospace;
+    background: rgba(43,74,139,0.07);
+    border-left: 3px solid var(--blue);
+    border-radius: 0 4px 4px 0;
+    padding: 0.7rem 1rem;
+    margin: 0.6rem 0;
+    font-size: 0.9rem;
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+
+  ul, ol { padding-left: 1.4rem; }
+  li { margin-bottom: 0.35rem; }
+
+  .callout {
+    background: linear-gradient(135deg, #fff9e6, #fffdf5);
+    border: 1px solid var(--gold);
+    border-left: 4px solid var(--gold);
+    border-radius: 4px;
+    padding: 0.8rem 1rem;
+    margin: 0.8rem 0;
+    font-size: 0.94rem;
+  }
+  .callout strong { color: var(--accent); }
+
+  .callout-purple {
+    background: #faf6ff;
+    border: 1px solid #c9b0f0;
+    border-left: 4px solid var(--purple);
+    border-radius: 4px;
+    padding: 0.8rem 1rem;
+    margin: 0.8rem 0;
+    font-size: 0.94rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    margin: 0.8rem 0;
+  }
+  th { background: var(--ink); color: var(--gold); padding: 0.5rem 0.8rem; text-align: left; font-family: 'Playfair Display', serif; }
+  td { padding: 0.45rem 0.8rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--cream); }
+
+  hr.section-div {
+    border: none;
+    border-top: 2px dashed var(--border);
+    margin: 2.5rem 0;
+  }
+
+  .tag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 0.1em 0.6em;
+    border-radius: 3px;
+    vertical-align: middle;
+    margin-left: 0.4rem;
+  }
+  .tag-new {
+    background: var(--green);
+  }
+  .tag-viz {
+    background: var(--purple);
+  }
+
+  .step {
+    display: flex;
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    background: var(--blue);
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    min-width: 1.8rem;
+    height: 1.8rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: #888;
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 0.8rem 0;
+  }
+  @media (max-width: 600px) { .two-col { grid-template-columns: 1fr; } }
+
+  .viz-card {
+    background: #f8f4ff;
+    border: 1px solid #d4c0f0;
+    border-radius: 6px;
+    padding: 0.9rem;
+  }
+  .viz-card h4 {
+    color: var(--purple);
+    font-family: 'Playfair Display', serif;
+    margin-bottom: 0.4rem;
+    font-size: 1rem;
+  }
+  .viz-card p { font-size: 0.9rem; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Multivariate Analysis</h1>
+  <p>Complete Study Guide — All Class Notes Combined</p>
+  <div class="subtitle">Handwritten Notes + Lecture Notes + Problem Sets — Nothing Left Out</div>
+</header>
+
+<nav class="toc">
+  <h2>Table of Contents</h2>
+
+  <div class="toc-group">
+    <div class="toc-group-title">Part I — Multivariate Descriptive Statistics</div>
+    <ol>
+      <li><a href="#s0">What is Multivariate Data? Notation & Setup</a></li>
+      <li><a href="#s0b">Types of Multivariate Descriptive Problems</a></li>
+      <li><a href="#s5">Multiple Regression Equation — Full Theory</a></li>
+      <li><a href="#s5b">Important Results on Regression (7 Key Results)</a></li>
+      <li><a href="#s6">Multiple Correlation Coefficient</a></li>
+      <li><a href="#s7">Partial Correlation Coefficient & Spurious Correlation</a></li>
+    </ol>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-group-title">Part II — Multivariate Probability Distributions</div>
+    <ol start="7">
+      <li><a href="#s1">Multivariate Probability Distributions (Discrete & Continuous)</a></li>
+      <li><a href="#s2">Marginal & Conditional Distributions</a></li>
+      <li><a href="#s3">Mean Vector & Dispersion (Variance-Covariance) Matrix</a></li>
+      <li><a href="#s4">Important Results on Mean Vector & Dispersion Matrix</a></li>
+      <li><a href="#s8">Multinomial Distribution</a></li>
+      <li><a href="#s9">Properties of Multinomial Distribution ★ Exam Important</a></li>
+    </ol>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-group-title">Part III — Multivariate Normal & Sampling</div>
+    <ol start="13">
+      <li><a href="#s11">Multivariate Normal Distribution (MVN)</a></li>
+      <li><a href="#s12">Results on MVN: Linear Combinations & Partitioning</a></li>
+      <li><a href="#s13">Sampling from MVN — MLE & Wishart Distribution</a></li>
+      <li><a href="#s14">Hotelling's T² Distribution</a></li>
+    </ol>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-group-title">Part IV — Multivariate Visualization Techniques</div>
+    <ol start="17">
+      <li><a href="#v1">Mosaic Plots</a></li>
+      <li><a href="#v2">Scatterplot Matrix (SPLOM / Pair Plot)</a></li>
+      <li><a href="#v3">Bivariate Q-Q Plots</a></li>
+      <li><a href="#v4">Spider / Radar Charts</a></li>
+      <li><a href="#v5">DD Plots (Depth vs Depth)</a></li>
+      <li><a href="#v6">Parallel Coordinate Plots</a></li>
+      <li><a href="#v7">Trellis Displays</a></li>
+    </ol>
+  </div>
+
+  <div class="toc-group">
+    <div class="toc-group-title">Part V — Problem Sets & Worked Solutions</div>
+    <ol start="24">
+      <li><a href="#ps1">Problem Set 1 — Multivariate Descriptive Statistics (Chicken Data)</a></li>
+      <li><a href="#ps2">Problem Set 2 — Multinomial Distribution</a></li>
+      <li><a href="#qr">Quick Reference — All Key Formulas</a></li>
+    </ol>
+  </div>
+</nav>
+
+<main>
+
+<!-- ════════════════════════════════════════════════════ -->
+<div class="chapter-banner">Part I — Multivariate Descriptive Statistics</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s0">
+  <div class="unit-header">
+    <span class="unit-number">01</span>
+    <span class="unit-title">What is Multivariate Data? Notation & Setup <span class="tag tag-new">New</span></span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Note_13_01_26 & Recapitulation)</div>
+    <div class="block-body">
+      <strong>Definition:</strong> By multivariate data we mean data collected on a number of variables from each of a given set of individuals. Let there be 'p' such variables x₁, x₂, …, xₚ and we have n individuals under consideration.
+      <br><br>
+      <strong>Notation:</strong> We denote by xᵢₐ the value of xᵢ for the α-th individual:
+      <div class="math-block">i = 1, 2, …, p   (variable index)
+α = 1, 2, …, n   (individual index)</div>
+
+      <strong>Real Dataset Example — 10 Largest U.S. Industrial Corporations (Fortune 500, 1990):</strong>
+      <table>
+        <tr><th>Company</th><th>Sales x₁ ($M)</th><th>Profit x₂ ($M)</th><th>Assets x₃ ($M)</th></tr>
+        <tr><td>General Motors</td><td>126,974</td><td>4,224</td><td>173,297</td></tr>
+        <tr><td>Ford</td><td>96,933</td><td>3,835</td><td>160,893</td></tr>
+        <tr><td>Exxon</td><td>86,656</td><td>3,510</td><td>83,219</td></tr>
+        <tr><td>IBM</td><td>63,438</td><td>3,758</td><td>77,734</td></tr>
+        <tr><td>General Electric</td><td>55,264</td><td>3,939</td><td>128,344</td></tr>
+        <tr><td>Mobil</td><td>50,976</td><td>1,809</td><td>39,080</td></tr>
+        <tr><td>Philip Morris</td><td>39,069</td><td>2,946</td><td>38,528</td></tr>
+        <tr><td>Chrysler</td><td>36,156</td><td>359</td><td>51,038</td></tr>
+        <tr><td>du Pont</td><td>35,209</td><td>2,480</td><td>34,715</td></tr>
+        <tr><td>Texaco</td><td>32,416</td><td>2,413</td><td>25,636</td></tr>
+      </table>
+      <em>Discussion: This is 3-variable (p=3) multivariate data with n=10 observations.</em>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      In <strong>univariate</strong> statistics, you study one variable at a time (e.g., just sales). In <strong>bivariate</strong>, you study two together (sales vs. profit). In <strong>multivariate</strong>, you study <em>all p variables simultaneously</em>.
+      <br><br>
+      The subscript notation xᵢₐ is just a bookkeeping system:
+      <ul>
+        <li><strong>First subscript i</strong> = which variable (Sales? Profit? Assets?)</li>
+        <li><strong>Second subscript α</strong> = which company/individual</li>
+      </ul>
+      So x₁₃ = Sales of Exxon = 86,656 million.
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s0b">
+  <div class="unit-header">
+    <span class="unit-number">02</span>
+    <span class="unit-title">Types of Multivariate Descriptive Problems <span class="tag tag-new">New</span></span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes</div>
+    <div class="block-body">
+      In the multivariate setup, there are two main types of problems:
+      <br><br>
+      <strong>Type 1 — Multiple Regression:</strong> There is one variable of principal interest, say x₁. We want to judge how x₁ is related to x₂, x₃, …, xₚ. We form an equation expressing x₁ as a function of x₂, x₃, …, xₚ. This equation may then be used as a predicting formula for x₁ in a situation where its value is unknown but the values of the other variables x₂, x₃, …, xₚ are known.
+      <br><br>
+      <strong>Type 2 — Multiple Correlation:</strong> x₁ may be the variable of principal interest and we may like to judge the extent to which x₁ may be said to depend on x₂, x₃, …, xₚ. This is a measure of association.
+      <br><br>
+      <strong>Type 3 — Partial Correlation:</strong> There will be two variables of principal interest, say x₁ and x₂. We want to judge the extent to which x₁ and x₂ are related when the effects of x₃, x₄, …, xₚ are eliminated from each of them. In other words, we judge to what extent x₁ and x₂ may be considered to be related independent of the influence of x₃, x₄, …, xₚ on them.
+      <br><br>
+      <strong>Note:</strong> In every situation we shall consider only the <em>linear</em> relationship.
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      Think of it with the Fortune 500 data (Sales=x₁, Profit=x₂, Assets=x₃):
+      <br><br>
+      <ul>
+        <li><strong>Regression</strong>: Predict Sales (x₁) from Profit and Assets. Build a formula.</li>
+        <li><strong>Multiple Correlation</strong>: How well do Profit and Assets together predict Sales? Answer: one number R between 0 and 1.</li>
+        <li><strong>Partial Correlation</strong>: What is the true relationship between Sales and Profit, after removing the confounding effect of Assets from both?</li>
+      </ul>
+      <div class="callout"><strong>Key insight:</strong> We always deal with linear relationships in this course. Non-linear relationships can often be linearized using log/square-root transformations.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s5">
+  <div class="unit-header">
+    <span class="unit-number">03</span>
+    <span class="unit-title">Multiple Regression Equation — Full Theory</span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Recapitulation + Handwritten)</div>
+    <div class="block-body">
+      <strong>Sample Statistics Notation:</strong>
+      <div class="math-block">x̄ᵢ = (1/n) Σα xᵢα         = Mean of xᵢ,       i = 1,2,…,p
+
+sᵢ² = (1/n) Σα (xᵢα − x̄ᵢ)²  = Variance of xᵢ,   i = 1,2,…,p
+
+sᵢⱼ = (1/n) Σα (xᵢα−x̄ᵢ)(xⱼα−x̄ⱼ) = Cov(xᵢ, xⱼ)
+
+rᵢⱼ = sᵢⱼ/(sᵢ sⱼ)            = Corr. coeff. between xᵢ and xⱼ
+
+rii = 1   for all i</div>
+
+      <strong>Correlation Matrix:</strong>
+      <div class="math-block">     ⎡ 1    r₁₂  r₁₃ … r₁ₚ ⎤
+R =  ⎢ r₂₁  1    r₂₃ … r₂ₚ ⎥
+     ⎣ rₚ₁  rₚ₂  rₚ₃ …  1  ⎦
+
+Rᵢⱼ = Cofactor of the (i,j)th element rᵢⱼ in R</div>
+
+      <strong>Multiple Regression Equation of x₁ on x₂, x₃, …, xₚ:</strong>
+      <div class="math-block">X₁.₂₃…ₚ = b₀ + b₂x₂ + b₃x₃ + … + bₚxₚ
+
+where:
+bⱼ = − (R₁ⱼ/R₁₁) · (s₁/sⱼ),   j = 2, 3, …, p
+
+b₀ = x̄₁ − b₂x̄₂ − b₃x̄₃ − … − bₚx̄ₚ
+
+Full form:
+X₁.₂₃…ₚ = x̄₁ − (R₁₂/R₁₁)(s₁/s₂)(x₂−x̄₂) 
+               − (R₁₃/R₁₁)(s₁/s₃)(x₃−x̄₃)
+               − … 
+               − (R₁ₚ/R₁₁)(s₁/sₚ)(xₚ−x̄ₚ)</div>
+
+      <strong>Note on Partial Regression Coefficient:</strong> The coefficient bⱼ, or more precisely b₁ⱼ.₂₃…ⱼ₋₁,ⱼ₊₁…ₚ, is called the <em>partial regression coefficient</em> of x₁ on xⱼ, given x₂, x₃, …, xⱼ₋₁, xⱼ₊₁,…, xₚ. It represents the amount by which the predicted value of x₁ increases for one-unit increase in the value of xⱼ, with all other variables remaining unaltered.
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      The regression equation is a linear formula: plug in the values of x₂, x₃, … xₚ and get a prediction of x₁.
+      <br><br>
+      <strong>How to compute bⱼ step by step:</strong>
+      <div class="step"><div class="step-num">1</div><div>Write down the correlation matrix R (all pairwise correlations)</div></div>
+      <div class="step"><div class="step-num">2</div><div>Compute the cofactor R₁ⱼ (the signed minor of element r₁ⱼ in R) for each j=2,…,p</div></div>
+      <div class="step"><div class="step-num">3</div><div>Compute the cofactor R₁₁ (the signed minor of the (1,1) element)</div></div>
+      <div class="step"><div class="step-num">4</div><div>Apply: bⱼ = −(R₁ⱼ/R₁₁)·(s₁/sⱼ). Note the minus sign!</div></div>
+      <div class="step"><div class="step-num">5</div><div>Compute b₀ = x̄₁ − b₂x̄₂ − b₃x̄₃ − ⋯ − bₚx̄ₚ</div></div>
+      <div class="callout"><strong>Partial regression coefficient bⱼ</strong>: "If I increase xⱼ by 1 unit and hold all other variables constant, x₁ changes by bⱼ units." This is why it's called 'partial' — everything else is held fixed.</div>
+    </div>
+  </div>
+
+  <div class="block block-example">
+    <div class="block-label">✏️ Numerical Examples from Notes</div>
+    <div class="block-body">
+      <strong>Iris Dataset (X₁=Sepal length, X₂=Sepal width, X₃=Petal length, X₄=Petal width):</strong>
+      <div class="math-block">(a) Linear:  X₁.₂₃₄ = 1.856 + 0.65084·X₂ + 0.70913·X₃ − 0.55648·X₄
+    R² = 0.8586 → 85% variability explained
+
+(b) Log-linear: X₁.₂₃₄ = 1.3263 + 2.1734·log X₂ + 1.7634·log X₃ − 0.2210·log X₄
+    R² = 0.7953 → 79% variability explained
+
+→ Linear is more efficient (R² 0.8586 > 0.7953)</div>
+
+      <strong>Another dataset (unnamed in notes):</strong>
+      <div class="math-block">(a) Linear:  x̂₁.₂₃₄ = 0.410581 − 0.012621·x₂ + 0.004287·x₃ + 0.012397·x₄
+    R² = 0.6911 → 69% variability explained
+
+(b) Log:     x₁.₂₃₄ = 0.22384 − 0.11186·log x₂ + 0.05320·log x₃ + 0.03831·log x₄
+    R² = 0.9063 → 90% variability explained
+
+→ Log regression is more efficient here (R² 0.9063 > 0.6911)</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s5b">
+  <div class="unit-header">
+    <span class="unit-number">04</span>
+    <span class="unit-title">7 Important Results on Regression <span class="tag tag-new">New</span></span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Recapitulation)</div>
+    <div class="block-body">
+      Let X₁.₂₃…ₚ = fitted/predicted value of x₁, and x₁.₂₃…ₚ = x₁ − X₁.₂₃…ₚ = residual.
+      <br><br>
+      <ol>
+        <li><strong>Mean of fitted values = mean of observed:</strong>  X̄₁.₂₃…ₚ = x̄₁</li>
+        <li><strong>Mean residual = 0:</strong>  x̄₁.₂₃…ₚ = 0</li>
+        <li><strong>Residuals uncorrelated with predictors:</strong>  Cov(xᵢ, x₁.₂₃…ₚ) = 0  for i = 2, 3, …, p</li>
+        <li><strong>Fitted and residual are uncorrelated:</strong>  Cov(X₁.₂₃…ₚ, x₁.₂₃…ₚ) = 0</li>
+        <li><strong>Variance of fitted values:</strong>  V(X₁.₂₃…ₚ) = Cov(x₁, X₁.₂₃…ₚ)</li>
+        <li><strong>Variance of fitted values (formula):</strong>
+          <div class="math-block">V(X₁.₂₃…ₚ) = (1 − |R|/R₁₁) · s₁²</div>
+        </li>
+        <li><strong>Variance of residuals (formula):</strong>
+          <div class="math-block">V(x₁.₂₃…ₚ) = (|R|/R₁₁) · s₁²</div>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      These 7 results are the multivariate analogues of the well-known OLS regression properties:
+      <br><br>
+      <table>
+        <tr><th>Result</th><th>What it means</th><th>Why it matters</th></tr>
+        <tr><td>1. Mean(fitted) = mean(observed)</td><td>Regression passes through the centroid (x̄₁, x̄₂,…,x̄ₚ)</td><td>The model is unbiased at the mean</td></tr>
+        <tr><td>2. Mean(residual) = 0</td><td>Errors average out to zero</td><td>No systematic over/under-prediction</td></tr>
+        <tr><td>3. Cov(xᵢ, residual) = 0</td><td>Residuals uncorrelated with all predictors</td><td>Confirms OLS optimality</td></tr>
+        <tr><td>4. Cov(fitted, residual) = 0</td><td>Signal and noise are orthogonal</td><td>Classical OLS decomposition</td></tr>
+        <tr><td>6 & 7. Variance partition</td><td>V(x₁) = V(fitted) + V(residual)</td><td>Total variance split into explained + unexplained</td></tr>
+      </table>
+      <div class="callout"><strong>Result 6 & 7 together</strong>: V(X₁.₂₃…ₚ) + V(x₁.₂₃…ₚ) = (1−|R|/R₁₁)s₁² + (|R|/R₁₁)s₁² = s₁² = V(x₁). ✓ Variance is perfectly partitioned.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s6">
+  <div class="unit-header">
+    <span class="unit-number">05</span>
+    <span class="unit-title">Multiple Correlation Coefficient</span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes</div>
+    <div class="block-body">
+      Our purpose is to obtain a measure of the closeness of the relationship between x₁ and x₂, x₃, …, xₚ together.
+      <br><br>
+      In bivariate case, the measure of linear correlation is |r|. Similarly, the simple correlation coefficient between x₁ (observed) and X₁.₂₃…ₚ (predicted) serves as a measure of the joint statistical influence of x₂, x₃, …, xₚ on x₁. It is denoted by R₁.₂₃…ₚ and called the <strong>multiple correlation coefficient</strong>.
+      <br><br>
+      <strong>Definition:</strong>
+      <div class="math-block">R₁.₂₃…ₚ = Cov(x₁, X₁.₂₃…ₚ) / √[V(x₁) · V(X₁.₂₃…ₚ)]</div>
+
+      <strong>Formula:</strong>
+      <div class="math-block">R₁.₂₃…ₚ = (1 − |R|/R₁₁)^(1/2)</div>
+
+      <strong>Remarks:</strong>
+      <ol>
+        <li>V(X₁.₂₃…ₚ) = R²₁.₂₃…ₚ · s₁²</li>
+        <li>V(x₁.₂₃…ₚ) = (1 − R²₁.₂₃…ₚ) · s₁²</li>
+        <li>0 ≤ R₁.₂₃…ₚ ≤ 1</li>
+      </ol>
+
+      <strong>In the population (theoretical case):</strong>
+      <div class="math-block">ρ²₁.₂₃…ₚ = 1 − E[V(X₁|X₂,…,Xₚ)] / V(X₁)</div>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      R₁.₂₃…ₚ is just the ordinary correlation coefficient between the actual x₁ values and the predicted X₁.₂₃…ₚ values. Its square R² tells us what proportion of variance in x₁ is explained by all the other variables together.
+      <br><br>
+      <strong>Key interpretations:</strong>
+      <ul>
+        <li>R² = 0 → predictors explain nothing about x₁</li>
+        <li>R² = 1 → perfect prediction, all variance explained</li>
+        <li>R² = 0.85 → "85% of the variation in x₁ is explained by x₂, x₃, …, xₚ"</li>
+      </ul>
+      <div class="callout"><strong>Note:</strong> Unlike simple r which ranges from −1 to +1, R always ranges from 0 to 1 (it measures overall predictability, not direction).</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s7">
+  <div class="unit-header">
+    <span class="unit-number">06</span>
+    <span class="unit-title">Partial Correlation Coefficient & Spurious Correlation</span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Recapitulation — complete theory)</div>
+    <div class="block-body">
+      Sometimes the correlation between two variables x₁ and x₂ may be partly or wholly caused by the influence of other variables x₃, x₄, …, xₚ on both x₁ and x₂. We want to know what the correlation between x₁ and x₂ would be if the effects of x₃, x₄, …, xₚ on each of them were eliminated. This is called the <strong>partial correlation</strong> or <strong>net correlation</strong> between x₁ and x₂ eliminating x₃, x₄, …, xₚ.
+      <br><br>
+      <strong>Construction via residuals:</strong>
+      Fit the regression of x₁ on x₃, x₄, …, xₚ and x₂ on x₃, x₄, …, xₚ:
+      <div class="math-block">X₁.₃₄…ₚ = γ₀ + γ₃x₃ + γ₄x₄ + … + γₚxₚ
+X₂.₃₄…ₚ = δ₀ + δ₃x₃ + δ₄x₄ + … + δₚxₚ
+
+Residuals (parts unaffected by x₃,…,xₚ):
+x₁.₃₄…ₚ = x₁ − X₁.₃₄…ₚ
+x₂.₃₄…ₚ = x₂ − X₂.₃₄…ₚ
+
+r₁₂.₃₄…ₚ = Corr(x₁.₃₄…ₚ, x₂.₃₄…ₚ)</div>
+
+      <strong>Formula:</strong>
+      <div class="math-block">r₁₂.₃₄…ₚ = −R₁₂ / √(R₁₁ · R₂₂)</div>
+
+      <strong>Remarks:</strong>
+      <ol>
+        <li>−1 ≤ r₁₂.₃₄…ₚ ≤ 1</li>
+        <li>For total r₁₂: x₃,…,xₚ are <em>ignored</em>. For partial r₁₂.₃₄…ₚ: x₃,…,xₚ are <em>taken into account and their effects are sought to be eliminated</em>.</li>
+        <li><strong>Spurious Correlation:</strong> Consider 3 variables x₁, x₂, x₃. If r₁₂.₃ = 0, then:
+          <div class="math-block">(r₁₂ − r₁₃r₂₃) / √[(1−r₁₃²)(1−r₂₃²)] = 0
+⟹ r₁₂ = r₁₃r₂₃  which may ≠ 0</div>
+          So x₁ and x₂ have a non-zero correlation when x₃ is ignored, but are uncorrelated when x₃ is accounted for. By ignoring x₃, we introduce a non-zero correlation that was not really there. This is called <em>spurious correlation</em>.
+        </li>
+      </ol>
+
+      <strong>Numerical examples from handwritten notes:</strong>
+      <div class="math-block">Iris dataset:   r₁₂ = −0.1175  →  r₁₂.₃₄ = +0.6286
+                    Taking X₃, X₄ into account introduces HIGH POSITIVE correlation
+
+Other dataset:  r₁₂ = −0.7485  →  r₁₂.₃₄ = −0.794  |  Cov(x₁,x₂) = −0.748
+                    Taking X₃, X₄ into account introduces SLIGHT additional negative correlation</div>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      <strong>The key idea behind partial correlation:</strong>
+      <br><br>
+      Imagine you observe that ice cream sales (x₁) and drowning deaths (x₂) are highly positively correlated. Does ice cream cause drowning? No — both are driven by a third variable: hot weather (x₃). Once you control for temperature (eliminate x₃'s effect), the correlation between x₁ and x₂ drops to near zero. That zero is the partial correlation. The original correlation was <em>spurious</em>.
+      <br><br>
+      <strong>Computation recipe:</strong>
+      <div class="step"><div class="step-num">1</div><div>Regress x₁ on all other variables EXCEPT x₁ and x₂. Get residuals e₁.</div></div>
+      <div class="step"><div class="step-num">2</div><div>Regress x₂ on all other variables EXCEPT x₁ and x₂. Get residuals e₂.</div></div>
+      <div class="step"><div class="step-num">3</div><div>r₁₂.₃₄…ₚ = ordinary correlation between e₁ and e₂.</div></div>
+      <div class="step"><div class="step-num">4</div><div>Or use the formula: −R₁₂/√(R₁₁·R₂₂)</div></div>
+      <div class="callout"><strong>Spurious Correlation</strong>: When r₁₂ ≠ 0 but r₁₂.₃ = 0, the observed correlation between x₁ and x₂ is entirely due to their common relationship with x₃. Controlling for x₃ reveals the truth.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════ -->
+<div class="chapter-banner">Part II — Multivariate Probability Distributions</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s1">
+  <div class="unit-header">
+    <span class="unit-number">07</span>
+    <span class="unit-title">Multivariate Probability Distributions</span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Handwritten)</div>
+    <div class="block-body">
+      Let X₁, X₂, …, Xₚ be p random variables.<br><br>
+      <strong>Case 1 — Discrete:</strong> Each Xᵢ takes values xᵢ₁, xᵢ₂, …, xᵢmᵢ (i = 1(1)p).
+      <div class="math-block">P{X₁=x₁ⱼ₁, X₂=x₂ⱼ₂, …, Xₚ=xₚⱼₚ} = p_{j₁j₂…jₚ}</div>
+      The joint pmf f(x₁,…,xₚ) satisfies:
+      <ul>
+        <li>f(x₁,…,xₚ) ≥ 0   for all x₁,…,xₚ</li>
+        <li>Σ f(x₁,…,xₚ) = 1</li>
+      </ul>
+      <strong>Case 2 — Continuous:</strong> Joint pdf f(x₁,…,xₚ) where:
+      <ul>
+        <li>f(x₁,…,xₚ) ≥ 0</li>
+        <li>∫⋯∫ f(x₁,…,xₚ) dx₁…dxₚ = 1</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      <strong>Discrete</strong>: List all combinations and assign probabilities. Probabilities must be non-negative and sum to 1.
+      <br>
+      <strong>Continuous</strong>: Use a density function; probabilities are volumes under a surface. Two rules: non-negative density, total volume = 1.
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s2">
+  <div class="unit-header">
+    <span class="unit-number">08</span>
+    <span class="unit-title">Marginal & Conditional Distributions</span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes</div>
+    <div class="block-body">
+      <strong>Marginal pmf of Xᵢ:</strong>
+      <div class="math-block">g(xᵢ) = Σ f(x₁, x₂,…, xₚ)   [sum over all other variables]</div>
+      <strong>Marginal of X₁,…,Xq (q &lt; p):</strong>
+      <div class="math-block">g(x₁,…,xq) = Σ f(x₁,…,xₚ)   [sum over xq₊₁,…,xₚ]</div>
+      <strong>Conditional pmf of X₁ given x₂,…,xₚ:</strong>
+      <div class="math-block">f(x₁ | x₂,…,xₚ) = f(x₁,…,xₚ) / g(x₂,…,xₚ)</div>
+      <strong>Conditional of X₁,…,Xq given Xq₊₁,…,Xₚ:</strong>
+      <div class="math-block">f(x₁,…,xq | xq₊₁,…,xₚ) = f(x₁,…,xₚ) / g(xq₊₁,…,xₚ)</div>
+      Note: In the continuous case, marginal and conditional distributions are obtained similarly (integrate instead of sum).
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      <strong>Marginal</strong>: "Sum out" or "integrate out" the variables you don't want to study. Like looking at row/column totals in a table.
+      <br><br>
+      <strong>Conditional</strong>: Distribution of some variables given others are fixed. Formula = Joint ÷ Marginal of the given variables.
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s3">
+  <div class="unit-header">
+    <span class="unit-number">09</span>
+    <span class="unit-title">Mean Vector & Dispersion Matrix</span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Handwritten)</div>
+    <div class="block-body">
+      E(Xᵢ) = μᵢ,   V(Xᵢ) = σᵢ²,   Cov(Xᵢ, Xⱼ) = ρᵢⱼ σᵢ σⱼ,   |ρᵢⱼ| ≤ 1
+      <br><br>
+      <strong>Mean Vector:</strong>
+      <div class="math-block">μ = E(X) = (μ₁, μ₂, …, μₚ)'</div>
+      <strong>Dispersion (Variance-Covariance) Matrix:</strong>
+      <div class="math-block">Σ = E[(X−μ)(X−μ)']
+
+   ⎡ V(X₁)      Cov(X₁,X₂) … Cov(X₁,Xₚ) ⎤
+ = ⎢ Cov(X₂,X₁)  V(X₂)   … Cov(X₂,Xₚ) ⎥
+   ⎣ Cov(Xₚ,X₁) Cov(Xₚ,X₂) …    V(Xₚ)  ⎦
+
+   ⎡ σ₁²   σ₁₂  σ₁₃ … σ₁ₚ ⎤
+ = ⎢ σ₂₁   σ₂²  σ₂₃ … σ₂ₚ ⎥   where σᵢⱼ = Cov(Xᵢ,Xⱼ)
+   ⎣ σₚ₁   σₚ₂  σₚ₃ …  σₚ²⎦</div>
+      <strong>Notes:</strong>
+      <ol>
+        <li>Σ is positive definite.</li>
+        <li>Σ is also called the Variance-Covariance Matrix.</li>
+        <li>Can equivalently be represented by the Correlation Matrix R (with 1s on diagonal, ρᵢⱼ off-diagonal).</li>
+        <li>Both Σ and R are symmetric.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      <strong>Mean vector</strong>: one mean per variable, stacked in a column.
+      <br><br>
+      <strong>Dispersion matrix Σ</strong>: a p×p table where diagonal = variances, off-diagonal = covariances. Symmetric (because Cov(Xᵢ,Xⱼ) = Cov(Xⱼ,Xᵢ)) and positive definite (variances can't be negative).
+      <br><br>
+      <strong>Correlation matrix R</strong>: standardised Σ — divide each covariance by the product of the two SDs. Diagonal becomes 1, off-diagonal becomes ρᵢⱼ ∈ [−1, 1].
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s4">
+  <div class="unit-header">
+    <span class="unit-number">10</span>
+    <span class="unit-title">Important Results on Mean Vector & Dispersion Matrix</span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes</div>
+    <div class="block-body">
+      Let X be a random vector with mean vector μ and dispersion matrix Σ.
+      <br><br>
+      <strong>Result 1 — For any real vector a:</strong>
+      <div class="math-block">E(a'X) = a'μ
+V(a'X) = a'Σa</div>
+      <strong>Result 2 — For any real matrix C:</strong>
+      <div class="math-block">E(CX) = Cμ
+D(CX) = CΣC'</div>
+      <strong>Joint CDF:</strong>
+      <div class="math-block">F(x₁,x₂,…,xₚ) = P(X₁ ≤ x₁, X₂ ≤ x₂, …, Xₚ ≤ xₚ)</div>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      <strong>Result 1</strong>: Any linear combination a'X = a₁X₁+a₂X₂+⋯ → mean = a'μ, variance = a'Σa (quadratic form).
+      <br>
+      <strong>Result 2</strong>: Matrix transform CX → mean = Cμ, dispersion = CΣC'. Used constantly to derive distributions of transformed variables.
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s8">
+  <div class="unit-header">
+    <span class="unit-number">11</span>
+    <span class="unit-title">Multinomial Distribution</span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes</div>
+    <div class="block-body">
+      Let X₁, X₂,…,Xk be jointly distributed discrete random variables. They follow a <strong>multinomial distribution</strong> if:
+      <div class="math-block">f(x₁,x₂,…,xk) = n! / (x₁! x₂! ⋯ xk! (n−Σxᵢ)!) · p₁^x₁ p₂^x₂ ⋯ pk^xk · (1−Σpᵢ)^(n−Σxᵢ)
+
+where xᵢ = 0,1,…,n ∀i,   Σxᵢ ≤ n,   0 &lt; pᵢ &lt; 1,   Σpᵢ &lt; 1</div>
+
+      <strong>Alternative (k+1 variable) form</strong> with Σpᵢ = 1 and Σxᵢ = n — <em>avoid this form as the dispersion matrix becomes singular.</em>
+      <br><br>
+      <strong>Special cases:</strong>
+      <div class="math-block">Trinomial: f(x,y,z) = n!/(x!y!z!) · p^x q^y r^z,   x+y+z=n,   p+q+r=1
+
+Binomial (k=1): f(x) = C(n,x)·p^x·q^(n-x)</div>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      Multinomial = Binomial extended to k > 2 outcomes. Roll a die n times instead of flipping a coin.
+      <div class="callout"><strong>Negative covariance:</strong> Cov(Xᵢ, Xⱼ) = −npᵢpⱼ &lt; 0. Always negative — more of one category necessarily means less of another.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s9">
+  <div class="unit-header">
+    <span class="unit-number">12</span>
+    <span class="unit-title">Properties of Multinomial Distribution <span class="tag">★ Exam Important</span></span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Handwritten)</div>
+    <div class="block-body">
+      Let (X₁, X₂,…,Xk) ~ Multinomial(n, p₁, p₂,…,pk).
+      <br><br>
+      <strong>P1:</strong> Marginal of Xᵢ ~ Binomial(n, pᵢ)
+      <br>
+      <strong>P2:</strong> Marginal of (X₁,…,Xq) for q &lt; k ~ Multinomial(n, p₁,…,pq)
+      <br>
+      <strong>P3:</strong> Conditional of X₁ | X₂=x₂,…,Xk=xk ~ Binomial(n−Σᵢ₌₂ᵏ xᵢ, p₁*) where p₁* = p₁/(1−Σᵢ₌₂ᵏ pᵢ)
+      <br>
+      <strong>P4:</strong> Conditional of (X₁,…,Xq) | Xq₊₁=xq₊₁,…,Xk=xk ~ Multinomial(n−Σᵢ₌q₊₁ᵏ xᵢ, p₁*,…,pq*) where pⱼ* = pⱼ/(1−Σᵢ₌q₊₁ᵏ pᵢ)
+      <br>
+      <strong>P5:</strong> S = X₁+X₂+⋯+Xq (q ≤ k) ~ Binomial(n, Σᵢ₌₁q pᵢ)
+      <br>
+      <strong>P6:</strong> Cov(Xᵢ, Xⱼ) = −npᵢpⱼ  for i ≠ j
+      <br>
+      <strong>P7 ★:</strong> True regression of X₁ on X₂,…,Xk is LINEAR:
+      <div class="math-block">E(X₁|x₂,…,xk) = (n−x₂−x₃−⋯−xk)·p₁*   [linear in x₂,…,xk]</div>
+
+      <strong>Multiple Correlation for Multinomial:</strong>
+      <div class="math-block">ρ²₁.₂₃…k = (p₁*−p₁)/(1−p₁)
+∴ ρ₁.₂₃…k = √[(p₁*−p₁)/(1−p₁)]</div>
+
+      <strong>Partial Correlation for Multinomial:</strong>
+      <div class="math-block">ρ₁₂.₃₄…k = −√(p₁p₂) / [√(1−p₁−p₃−⋯−pk) · √(1−p₂−p₃−⋯−pk)]
+
+           = −np₁p₂* / √[np₁(1−p₁*)·np₂(1−p₂*)]</div>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      <table>
+        <tr><th>Property</th><th>Plain English</th></tr>
+        <tr><td>P1 (Marginal = Binomial)</td><td>Each individual count is binomial — one category either happens or not</td></tr>
+        <tr><td>P2 (Subset is Multinomial)</td><td>Any group of categories from a multinomial is itself multinomial</td></tr>
+        <tr><td>P3 (Conditional = Binomial)</td><td>Fix all other counts → remaining count is binomial with adjusted probability p₁*</td></tr>
+        <tr><td>P5 (Sum = Binomial)</td><td>Combine categories → binomial with combined probability</td></tr>
+        <tr><td>P6 (Negative Covariance)</td><td>More of one → less of another (they compete for the fixed total n)</td></tr>
+        <tr><td>P7 ★ (Linear Regression)</td><td>The conditional expectation E(X₁|others) is linear in the other xᵢ values</td></tr>
+      </table>
+      <div class="callout"><strong>p₁* interpretation:</strong> p₁* = p₁/(1−Σpᵢ) is the conditional probability that a trial falls in category 1, given it didn't fall in categories 2,…,k. It's p₁ rescaled to the remaining probability space.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════ -->
+<div class="chapter-banner">Part III — Multivariate Normal & Sampling</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s11">
+  <div class="unit-header">
+    <span class="unit-number">13</span>
+    <span class="unit-title">Multivariate Normal Distribution (MVN)</span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Typed Notes — MVN)</div>
+    <div class="block-body">
+      <strong>Univariate Normal:</strong>
+      <div class="math-block">f(x) = 1/(σ√(2π)) · exp[−(x−μ)²/(2σ²)],   −∞ &lt; x &lt; ∞</div>
+
+      <strong>p-variate Normal Density:</strong>
+      <div class="math-block">f(x) = 1/((2π)^(p/2)|Σ|^(1/2)) · exp[−½(x−μ)'Σ⁻¹(x−μ)]
+
+−∞ &lt; xᵢ &lt; ∞  for i = 1,…,p
+
+Notation: X ~ Nₚ(μ, Σ)</div>
+
+      In the univariate case: scalar x, mean μ, variance σ². In the multivariate case: x is a vector, μ is a mean vector, σ² is replaced by dispersion matrix Σ (p×p symmetric positive definite). The squared term (x−μ)²/σ² becomes the quadratic form (x−μ)'Σ⁻¹(x−μ).
+
+      <strong>Bivariate Normal (BVN), p = 2:</strong>
+      <div class="math-block">f(x₁,x₂) = 1/(2π√σ₁₁ √σ₂₂ √(1−ρ₁₂²))
+  · exp{−1/(2(1−ρ₁₂²))[(x₁−μ₁)²/σ₁₁ + (x₂−μ₂)²/σ₂₂ 
+                          − 2ρ₁₂(x₁−μ₁)/√σ₁₁ · (x₂−μ₂)/√σ₂₂]}</div>
+
+      <strong>Special Property of BVN:</strong>
+      <div class="math-block">If ρ₁₂ = 0:   f(x₁,x₂) = f_{X₁}(x₁) · f_{X₂}(x₂)
+∴ X₁ and X₂ are INDEPENDENT
+
+In BVN (and MVN): Uncorrelated ⟺ Independent</div>
+      Note: Under multivariate case, probabilities are represented by volumes under the surface over regions defined by intervals of xᵢ values.
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      <table>
+        <tr><th>Feature</th><th>Univariate Normal</th><th>Multivariate Normal</th></tr>
+        <tr><td>Variable</td><td>Scalar x</td><td>Vector x = (x₁,…,xₚ)'</td></tr>
+        <tr><td>Mean</td><td>Scalar μ</td><td>Vector μ = (μ₁,…,μₚ)'</td></tr>
+        <tr><td>Spread</td><td>Variance σ²</td><td>Dispersion matrix Σ (p×p)</td></tr>
+        <tr><td>Exponent form</td><td>(x−μ)²/σ²</td><td>(x−μ)'Σ⁻¹(x−μ) — quadratic form</td></tr>
+        <tr><td>Normalizing constant</td><td>1/(σ√2π)</td><td>1/((2π)^(p/2)|Σ|^(1/2))</td></tr>
+      </table>
+      <div class="callout"><strong>Critical MVN property:</strong> For multivariate normal ONLY — zero correlation = independence. This is NOT true for general distributions! It's a special gift of the normal distribution.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s12">
+  <div class="unit-header">
+    <span class="unit-number">14</span>
+    <span class="unit-title">Results on MVN: Linear Combinations & Partitioning</span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Typed Notes — MVN Results)</div>
+    <div class="block-body">
+      <strong>Result 1 — Linear Combinations:</strong>
+      Let X ~ Nₚ(μ, Σ) and A be any m×p matrix of rank m ≤ p. Then:
+      <div class="math-block">Y = AX  ~  Nₘ(Aμ, AΣA')</div>
+      Remark: If m=1, the scalar a'X has univariate Normal with mean a'μ and variance a'Σa.
+      The joint distribution of any subset of elements of X is multivariate normal.
+      <em>Caution: Normal marginals do NOT necessarily imply joint normality.</em>
+      <br><br>
+      <strong>Result 2 — Partitioning:</strong>
+      Let X ~ Nₚ(μ, Σ) with partition:
+      <div class="math-block">X = (X⁽¹⁾ : q×1, X⁽²⁾ : (p−q)×1)
+μ = (μ⁽¹⁾, μ⁽²⁾)
+Σ = | Σ₁₁  Σ₁₂ |   (q×q and (p−q)×(p−q) blocks)
+    | Σ₂₁  Σ₂₂ |
+
+Independence: X⁽¹⁾ ⊥ X⁽²⁾  ⟺  Σ₁₂ = 0
+
+Conditional distributions:
+X⁽²⁾ | X⁽¹⁾=x⁽¹⁾  ~  N_{p−q}(μ⁽²⁾ + Σ₂₁Σ₁₁⁻¹(x⁽¹⁾−μ⁽¹⁾),  Σ₂₂.₁)
+  where Σ₂₂.₁ = Σ₂₂ − Σ₂₁Σ₁₁⁻¹Σ₁₂
+
+X⁽¹⁾ | X⁽²⁾=x⁽²⁾  ~  N_q(μ⁽¹⁾ + Σ₁₂Σ₂₂⁻¹(x⁽²⁾−μ⁽²⁾),  Σ₁₁.₂)
+  where Σ₁₁.₂ = Σ₁₁ − Σ₁₂Σ₂₂⁻¹Σ₂₁</div>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      <strong>Result 1</strong>: MVN is closed under linear transformations. Any linear combination of normal variables is normal. This makes the MVN incredibly easy to work with.
+      <br><br>
+      <strong>Result 2 (Partitioning)</strong>: Split variables into two groups. Each group, conditioned on the other, is still MVN with:
+      <ul>
+        <li><strong>Conditional mean</strong> = original mean + regression correction: μ⁽²⁾ + Σ₂₁Σ₁₁⁻¹(x⁽¹⁾−μ⁽¹⁾)</li>
+        <li><strong>Conditional variance</strong> = Σ₂₂ − Σ₂₁Σ₁₁⁻¹Σ₁₂ (always smaller — knowing more reduces uncertainty)</li>
+      </ul>
+      <div class="callout"><strong>Independence rule in MVN:</strong> Two subvectors of MVN are independent if and only if their cross-covariance block Σ₁₂ = 0 (null matrix).</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s13">
+  <div class="unit-header">
+    <span class="unit-number">15</span>
+    <span class="unit-title">Sampling from MVN — MLE & Wishart Distribution</span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes</div>
+    <div class="block-body">
+      MVN is completely specified by μ and Σ. Sample of n observations x₁,…,xₙ from Nₚ(μ,Σ), where xₐ = (xₐ₁,…,xₐₚ)'. (First subscript = unit, second = variable.)
+      <br><br>
+      <strong>Sample Mean Vector:</strong>
+      <div class="math-block">x̄ = (1/n)Σₐ xₐ = (x̄₁, x̄₂, …, x̄ₚ)'</div>
+
+      <strong>SSCP Matrix (Sum of Squares and Cross Products):</strong>
+      <div class="math-block">A = Σₐ (xₐ−x̄)(xₐ−x̄)' = [Σₐ(xₐᵢ−x̄ᵢ)(xₐⱼ−x̄ⱼ)]</div>
+
+      <strong>MLE:</strong>
+      <div class="math-block">μ̂ = x̄   (unbiased)
+Σ̂ = A/n  (biased)</div>
+
+      <strong>Theorem:</strong> x̄ ~ Nₚ(μ, Σ/n), independent of Σ̂.
+      <br><br>
+      <strong>Wishart Distribution:</strong> If M = X'X where X_{n×p} is from Nₚ(0,Σ), then M ~ Wₚ(Σ, m).
+      <div class="math-block">If Σ=I: standard form.   If p=1, Σ=1: M = Σxᵢ² ~ χ²_m</div>
+
+      <strong>Properties:</strong>
+      <ol>
+        <li>Sum of independent Wisharts (same Σ, d.f. m₁,…,mk): ~ Wₚ(Σ, Σmᵢ)</li>
+        <li>E(M) = mΣ</li>
+        <li>M ~ Wₚ(Σ,m), B a p×q matrix → B'MB ~ Wq(B'ΣB, m)</li>
+        <li>A = nΣ̂ ~ Wₚ(Σ, n−1)</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      <strong>Wishart = multivariate χ²</strong>. Just as Σxᵢ² ~ χ² in the univariate case, the SSCP matrix A follows a Wishart distribution.
+      <div class="callout"><strong>Key analogy:</strong> Univariate: (n−1)s² ~ σ²·χ²_{n-1}. Multivariate: A = nΣ̂ ~ Wₚ(Σ, n−1). So the unbiased estimator is A/(n−1).</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="s14">
+  <div class="unit-header">
+    <span class="unit-number">16</span>
+    <span class="unit-title">Hotelling's T² Distribution</span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes</div>
+    <div class="block-body">
+      <div class="math-block">Z = m · d' M⁻¹ d
+
+where d ~ Nₚ(0, Iₚ)  and  M ~ Wₚ(I, m)  (independent)
+
+→ Z ~ T²(p, m)   [Hotelling's T²]</div>
+
+      <strong>Relationship with F:</strong>
+      <div class="math-block">T²(p, m) = [mp/(m−p+1)] · F_{p, m−p+1}
+
+i.e. [(m−p+1)/(mp)] · Z ~ F_{p, m−p+1}</div>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      <table>
+        <tr><th>Univariate t-test</th><th>Multivariate Hotelling T²</th></tr>
+        <tr><td>t² = n(x̄−μ₀)²/s²</td><td>T² = n(x̄−μ₀)'S⁻¹(x̄−μ₀)</td></tr>
+        <tr><td>t² ~ F(1, n−1)</td><td>T²(p,m) ~ [mp/(m−p+1)]·F_{p,m−p+1}</td></tr>
+      </table>
+      <div class="callout"><strong>When p=1:</strong> T²(1,m) = F(1,m) = t²(m). Perfect generalization of the t-test.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════ -->
+<div class="chapter-banner">Part IV — Multivariate Visualization Techniques</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="v1">
+  <div class="unit-header">
+    <span class="unit-number">17</span>
+    <span class="unit-title">Mosaic Plots <span class="tag tag-new">New</span> <span class="tag tag-viz">Viz</span></span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Note_13_01_26)</div>
+    <div class="block-body">
+      A mosaic plot is a graphical representation of a contingency table, where the <strong>area of each rectangle is proportional to the frequency</strong> of observations in that category combination. It is used to explore associations between categorical variables and detect patterns, independence, or deviations.
+      <br><br>
+      <strong>Worked Example — 2×2 Contingency Table:</strong>
+      <table>
+        <tr><th></th><th>Young</th><th>Old</th></tr>
+        <tr><td><strong>Treatment</strong></td><td>30</td><td>20</td></tr>
+        <tr><td><strong>Placebo</strong></td><td>10</td><td>40</td></tr>
+      </table>
+
+      Expected Frequencies (Under Independence):
+      <table>
+        <tr><th></th><th>Young</th><th>Old</th></tr>
+        <tr><td><strong>Treatment</strong></td><td>20</td><td>30</td></tr>
+        <tr><td><strong>Placebo</strong></td><td>20</td><td>30</td></tr>
+      </table>
+
+      Pearson Residuals = (Observed − Expected)/√Expected:
+      <table>
+        <tr><th></th><th>Young</th><th>Old</th></tr>
+        <tr><td><strong>Treatment</strong></td><td>+2.24</td><td>−1.83</td></tr>
+        <tr><td><strong>Placebo</strong></td><td>−2.24</td><td>+1.83</td></tr>
+      </table>
+
+      <strong>Interpretation conventions:</strong>
+      <ul>
+        <li><strong>Width of columns</strong>: Proportional to frequency of the first variable (marginal distribution)</li>
+        <li><strong>Height of blocks</strong>: Proportional to frequency of the second variable within each first-variable category</li>
+        <li><strong>Blue shading</strong>: Positive Pearson residuals (higher than expected)</li>
+        <li><strong>Red shading</strong>: Negative Pearson residuals (lower than expected)</li>
+        <li><strong>Independence</strong>: Rectangles align proportionally without strong shading</li>
+      </ul>
+
+      <strong>Extension — 3 Categorical Variables (Gender × Smoking × Exercise):</strong>
+      <table>
+        <tr><th>Gender</th><th>Smoking</th><th>Exercise</th><th>Count</th></tr>
+        <tr><td>Male</td><td>Smoker</td><td>Regular</td><td>40</td></tr>
+        <tr><td>Male</td><td>Smoker</td><td>Occasional</td><td>30</td></tr>
+        <tr><td>Male</td><td>Smoker</td><td>None</td><td>20</td></tr>
+        <tr><td>Male</td><td>Non-Smoker</td><td>Regular</td><td>50</td></tr>
+        <tr><td>Male</td><td>Non-Smoker</td><td>Occasional</td><td>40</td></tr>
+        <tr><td>Male</td><td>Non-Smoker</td><td>None</td><td>30</td></tr>
+        <tr><td>Female</td><td>Smoker</td><td>Regular</td><td>35</td></tr>
+        <tr><td>Female</td><td>Smoker</td><td>Occasional</td><td>25</td></tr>
+        <tr><td>Female</td><td>Smoker</td><td>None</td><td>15</td></tr>
+        <tr><td>Female</td><td>Non-Smoker</td><td>Regular</td><td>45</td></tr>
+        <tr><td>Female</td><td>Non-Smoker</td><td>Occasional</td><td>35</td></tr>
+        <tr><td>Female</td><td>Non-Smoker</td><td>None</td><td>25</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      A mosaic plot is like a bar chart that can show two or more categorical variables at once. The rectangles' areas tell you how common each combination is.
+      <br><br>
+      <strong>Reading the plot:</strong>
+      <ul>
+        <li>Wide column → that category is more common overall</li>
+        <li>Tall block → that subcategory is more common within the column</li>
+        <li>Blue = more than you'd expect if independent (positive residual)</li>
+        <li>Red = less than you'd expect if independent (negative residual)</li>
+        <li>No shading = the two variables are approximately independent</li>
+      </ul>
+      <div class="callout"><strong>In our example:</strong> Treatment group has more Young participants than expected (+2.24) and fewer Old (−1.83). Placebo is the reverse. This tells us Treatment and Age are associated — not independent.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="v2">
+  <div class="unit-header">
+    <span class="unit-number">18</span>
+    <span class="unit-title">Scatterplot Matrix (SPLOM / Pair Plot) <span class="tag tag-new">New</span> <span class="tag tag-viz">Viz</span></span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Note_19_01_26)</div>
+    <div class="block-body">
+      A Scatterplot Matrix (SPLOM or Pair Plot) is a powerful visualization showing <strong>pairwise relationships</strong> between multiple variables in a dataset through a grid of individual scatterplots. It reveals correlations, patterns, and outliers across all variable combinations. Diagonal plots often show variable distributions.
+      <br><br>
+      <strong>Uses in Data Analysis:</strong>
+      <ul>
+        <li><strong>Correlation Detection:</strong> Quickly spot strong positive, negative, or no correlations between variables.</li>
+        <li><strong>Pattern Identification:</strong> Uncover non-linear relationships or clusters.</li>
+        <li><strong>Outlier Detection:</strong> Identify unusual data points in multiple dimensions.</li>
+        <li><strong>Feature Selection:</strong> Inform regression or modelling by identifying potentially multicollinear predictors.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      Imagine a p×p grid of scatterplots. The cell at row i, column j shows the scatterplot of variable xᵢ vs xⱼ. The diagonal (row i = col i) shows the distribution of xᵢ itself (histogram or density).
+      <br><br>
+      <strong>What to look for:</strong>
+      <ul>
+        <li>Tight upward band → strong positive correlation</li>
+        <li>Tight downward band → strong negative correlation</li>
+        <li>Circular cloud → near-zero correlation</li>
+        <li>Curved pattern → non-linear relationship</li>
+        <li>Isolated point far from cloud → outlier</li>
+      </ul>
+      <div class="callout"><strong>Practical tip:</strong> With p variables, you get p(p−1)/2 unique scatterplots. With p=4 (Iris), that's 6 plots shown simultaneously. With p=10, that's 45 plots — so SPLOM scales well for initial exploration.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="v3">
+  <div class="unit-header">
+    <span class="unit-number">19</span>
+    <span class="unit-title">Bivariate Q-Q Plots <span class="tag tag-new">New</span> <span class="tag tag-viz">Viz</span></span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Note_19_01_26)</div>
+    <div class="block-body">
+      A Q-Q (quantile–quantile) plot compares the quantiles of two distributions. In the <strong>bivariate case</strong>, instead of comparing one variable to a theoretical distribution, you compare two sets of paired data. It helps assess whether two variables follow the same distributional shape or whether one systematically differs.
+      <br><br>
+      <strong>Applications of Q-Q Plots:</strong>
+      <ul>
+        <li><strong>Assessing Distributional Assumptions:</strong> Visually inspect whether a dataset follows a specific distribution (e.g., normal). Crucial for statistical inference.</li>
+        <li><strong>Detecting Outliers:</strong> Points that deviate significantly from the diagonal line indicate outliers.</li>
+        <li><strong>Comparing Distributions:</strong> Are two datasets from the same distribution? Points on the diagonal → yes.</li>
+        <li><strong>Assessing Normality:</strong> Points on the y=x line → normal. Systematic curve → skewed or heavy-tailed.</li>
+        <li><strong>Model Validation:</strong> Check if model residuals are normally distributed (econometrics, ML).</li>
+        <li><strong>Quality Control:</strong> Monitor distribution of measured values over time or across batches.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      A Q-Q plot sorts both datasets and plots the i-th quantile of one against the i-th quantile of the other.
+      <br><br>
+      <strong>Reading the plot:</strong>
+      <ul>
+        <li>Points follow the diagonal line y=x → same distribution</li>
+        <li>Points curve upward at the ends → heavier tails than reference (leptokurtic)</li>
+        <li>Points curve inward → lighter tails (platykurtic)</li>
+        <li>S-shape → one distribution is skewed relative to the other</li>
+        <li>Points jump off the line at one end → outliers in the tail</li>
+      </ul>
+      <div class="callout"><strong>Most common use:</strong> Normal Q-Q plot — plot your data's quantiles against normal distribution quantiles. If the data is normal, all points fall on a straight line.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="v4">
+  <div class="unit-header">
+    <span class="unit-number">20</span>
+    <span class="unit-title">Spider / Radar Charts <span class="tag tag-new">New</span> <span class="tag tag-viz">Viz</span></span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Note_19_01_26)</div>
+    <div class="block-body">
+      A spider chart (also called a radar chart) is used when we want to display data across <strong>several unique dimensions simultaneously</strong>. Dimensions are usually quantitative and typically normalized to the same range. The coordinate system used is <strong>polar coordinates</strong> (not Cartesian).
+      <br><br>
+      Each dimension gets its own axis radiating from the center. The data point for each dimension is marked on its axis, and all points are connected to form a polygon. The area of the polygon represents the overall "score."
+      <br><br>
+      <strong>Advantages:</strong>
+      <ul>
+        <li>Allows comparison of multiple dimensions in a compact space.</li>
+        <li>Visually engaging and easy to present to audiences.</li>
+        <li>Good for comparing profiles of two or more entities.</li>
+      </ul>
+      <br>
+      <strong>Example (Students):</strong> For student Arthur, dimensions might be: Final exam grade, Midterm grade, Assignments completed, Hours studied, Days attended. Each dimension gets a spoke, and Arthur's values are plotted to form his "performance polygon."
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      Imagine a clock face. Each hour mark represents one variable. Draw a dot on each spoke based on the variable's value (closer to centre = smaller value). Connect the dots — that's the spider chart.
+      <br><br>
+      <strong>When to use:</strong>
+      <ul>
+        <li>Comparing performance profiles (e.g., two athletes across 5 skills)</li>
+        <li>Showing strengths and weaknesses across multiple dimensions</li>
+        <li>When all variables are on comparable scales (or are normalized)</li>
+      </ul>
+      <strong>When NOT to use:</strong>
+      <ul>
+        <li>Many variables (>8) — becomes hard to read</li>
+        <li>When axis order matters (spider charts are sensitive to dimension ordering)</li>
+        <li>For precise numerical comparison (bar charts are better)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="v5">
+  <div class="unit-header">
+    <span class="unit-number">21</span>
+    <span class="unit-title">DD Plots (Depth versus Depth) <span class="tag tag-new">New</span> <span class="tag tag-viz">Viz</span></span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Note_19_01_26)</div>
+    <div class="block-body">
+      The DD (Depth vs Depth) plot is a graphical tool for <strong>comparing two multivariate datasets</strong> regardless of dimension. It transforms high-dimensional data into a simple 2D scatter plot.
+      <br><br>
+      <strong>Key Concept — Data Depth:</strong> Measures how "central" or "outlying" a data point is within a multivariate sample. Various depth functions exist: halfspace depth, simplicial depth.
+      <br><br>
+      <strong>Construction:</strong>
+      <div class="step"><div class="step-num">1</div><div>Compute the depth of every point (from both samples) with respect to distribution F.</div></div>
+      <div class="step"><div class="step-num">2</div><div>Compute the depth of every point with respect to distribution G.</div></div>
+      <div class="step"><div class="step-num">3</div><div>Plot pairs (Depth(z, F), Depth(z, G)) for all points z in the combined sample.</div></div>
+
+      <strong>Interpretation:</strong>
+      <ul>
+        <li><strong>Identical distributions (F=G):</strong> Points cluster tightly around the identity line y=x.</li>
+        <li><strong>Location shift only:</strong> Points form a "leaf" shape deviating from the diagonal. Direction shows which distribution has larger location parameter.</li>
+        <li><strong>Scale or skewness differences:</strong> Different patterns of deviation from the diagonal.</li>
+      </ul>
+
+      <strong>Applications:</strong>
+      <ul>
+        <li><strong>Graphical comparison:</strong> Nonparametric visual comparison of two multivariate samples without distributional assumptions.</li>
+        <li><strong>Hypothesis testing:</strong> Visual patterns can be formalized into permutation tests for homogeneity, location, or scale differences.</li>
+        <li><strong>Outlier detection:</strong> Compare sample to a theoretical distribution to identify multivariate outliers.</li>
+        <li><strong>Classification (DD-classifier):</strong> Find an optimal curve in 2D depth space to separate classes.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      The problem with comparing two high-dimensional datasets is you can't simply plot them. The DD plot solves this by reducing everything to a single number per point: its <em>depth</em> (how central the point is in each dataset).
+      <br><br>
+      <strong>Depth intuition:</strong> A point that is right in the middle of a cloud of data has high depth. A point at the edge has low depth.
+      <br><br>
+      <strong>Reading the DD plot:</strong>
+      <ul>
+        <li>Points on the diagonal → both datasets treat this point as equally central → same distribution</li>
+        <li>Points above diagonal → point is more central in G than F</li>
+        <li>Points below diagonal → point is more central in F than G</li>
+        <li>Leaf shape → location shift (one group's centre is shifted)</li>
+      </ul>
+      <div class="callout"><strong>Key advantage:</strong> Completely nonparametric (no normality assumption needed) and works in any number of dimensions.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="v6">
+  <div class="unit-header">
+    <span class="unit-number">22</span>
+    <span class="unit-title">Parallel Coordinate Plots <span class="tag tag-new">New</span> <span class="tag tag-viz">Viz</span></span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Note_19_01_26)</div>
+    <div class="block-body">
+      A parallel coordinate plot is a data visualization technique used to plot and analyse <strong>multivariate data</strong>. Each data point is represented as a single continuous line traversing across several parallel, vertical axes, with each axis representing a different variable.
+      <br><br>
+      <strong>Key Components:</strong>
+      <ul>
+        <li><strong>Parallel Axes:</strong> Equally spaced vertical lines, each corresponding to a specific variable. Each axis has its own scale or is normalized.</li>
+        <li><strong>Data Lines (Polylines):</strong> Each line = one observation. Where a line intersects an axis = value of that variable for that observation.</li>
+      </ul>
+
+      <strong>Interpretation:</strong>
+      <ul>
+        <li><strong>Positive Correlation:</strong> Lines between two adjacent axes appear parallel (same direction).</li>
+        <li><strong>Negative Correlation:</strong> Lines between two adjacent axes cross frequently, forming an "X" shape.</li>
+        <li><strong>No Correlation:</strong> Lines cross randomly or show no pattern.</li>
+        <li><strong>Clusters:</strong> Similar data points form distinct bands or groups of parallel lines.</li>
+        <li><strong>Outliers:</strong> Lines that conspicuously diverge from the main flow.</li>
+      </ul>
+
+      <strong>Applications:</strong> Data analysis, engineering, scientific research for multidimensional data exploration, feature analysis, and anomaly detection. Supported in Plotly, Pandas, ELKI.
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      Instead of plotting variables on x-y axes (which only works for 2 variables), parallel coordinate plots put each variable on its own vertical axis and draw a line connecting each observation's values across all axes.
+      <br><br>
+      <strong>Think of it as:</strong> Each person in a dataset is a coloured thread woven through vertical poles (variables). If most threads go in the same direction between two poles → positive correlation. If they cross → negative correlation.
+      <br><br>
+      <strong>Example with 4 variables (Iris):</strong> Draw 4 vertical axes (Sepal length, Sepal width, Petal length, Petal width). Each flower is one line connecting its 4 measurements. Species form distinct bands of lines, showing natural clusters.
+      <div class="callout"><strong>Limitation:</strong> Only adjacent axes are visually compared easily. Reordering axes can reveal different patterns — try different orderings to explore the data.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="v7">
+  <div class="unit-header">
+    <span class="unit-number">23</span>
+    <span class="unit-title">Trellis Displays <span class="tag tag-new">New</span> <span class="tag tag-viz">Viz</span></span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 From Notes (Note_19_01_26)</div>
+    <div class="block-body">
+      Trellis charts (also known as <strong>multiple mini-charts</strong> or faceted plots) are a powerful data visualization technique that allows for comparison of multiple subsets of data within a single visualization.
+      <br><br>
+      <strong>How it works:</strong> The data is divided into multiple small charts ("trellises"), each representing a specific subcategory. Each trellis can be further divided into smaller subplots using traditional charting methods (bar charts, line charts, scatter plots).
+      <br><br>
+      <strong>Main advantages:</strong>
+      <ul>
+        <li>Comparison of many subsets of data in a single visualization.</li>
+        <li>Useful when data has many dimensions.</li>
+        <li>Helps identify patterns and trends difficult to see in a single large chart.</li>
+        <li>Supports bar charts, line charts, and scatter plots as sub-plots.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block block-explain">
+    <div class="block-label">💡 Simple Explanation</div>
+    <div class="block-body">
+      A trellis display is like making the same chart multiple times — once for each subgroup of your data — and displaying them side by side on a grid (the "trellis").
+      <br><br>
+      <strong>Example:</strong> You have sales data for 4 regions × 3 years × 2 product types. Instead of one messy chart, you make a 4×3 grid of charts, each showing one region-year combination, with both product types in each chart.
+      <br><br>
+      <strong>Key principle:</strong> Each mini-chart has the same scale and format, so you can make fair visual comparisons across all the panels at a glance.
+      <div class="callout"><strong>Modern name:</strong> In ggplot2 (R) this is called "faceting" (facet_wrap or facet_grid). In Plotly it's "subplots". The trellis display principle is the same.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════ -->
+<div class="chapter-banner">Part V — Problem Sets & Worked Solutions</div>
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="ps1">
+  <div class="unit-header">
+    <span class="unit-number">24</span>
+    <span class="unit-title">Problem Set 1 — Multivariate Descriptive Statistics <span class="tag tag-new">New</span></span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 Problem Statement (Multivariate_1.docx — Date: 01.02.22)</div>
+    <div class="block-body">
+      Per capita demand for chicken (x₁, kg), price of chicken (x₂, Rs/kg), price of fish (x₃, Rs/kg), per capita income (x₄, thousand Rs at 1993-94 prices) across different Indian states.
+      <br><br>
+      <strong>Tasks:</strong>
+      <ol type="a">
+        <li>Fit a multiple linear regression of x₁ on x₂, x₃, x₄. Obtain a measure of efficacy (R²).</li>
+        <li>Fit a multiple linear regression of x₁ on ln x₂, ln x₃, ln x₄. Obtain R².</li>
+        <li>Compare regressions (a) and (b) in terms of their efficacy.</li>
+        <li>Compute the total (simple) correlation coefficient between x₁ and x₂.</li>
+        <li>Compute the partial correlation coefficient between x₁ and x₂ eliminating x₃ and x₄.</li>
+        <li>Comment on (d) and (e).</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="block block-problem">
+    <div class="block-label">✏️ How to Solve — Method Guide</div>
+    <div class="block-body">
+      <strong>(a) & (b) Fitting regression + R²:</strong>
+      <div class="step"><div class="step-num">1</div><div>Compute means x̄ᵢ and standard deviations sᵢ for each variable (use log-transformed x₂, x₃, x₄ for part b).</div></div>
+      <div class="step"><div class="step-num">2</div><div>Compute the 4×4 correlation matrix R with all pairwise rᵢⱼ = sᵢⱼ/(sᵢsⱼ).</div></div>
+      <div class="step"><div class="step-num">3</div><div>Compute cofactors R₁₁, R₁₂, R₁₃, R₁₄ of R.</div></div>
+      <div class="step"><div class="step-num">4</div><div>Apply: bⱼ = −(R₁ⱼ/R₁₁)·(s₁/sⱼ) for j=2,3,4. Then b₀ = x̄₁ − b₂x̄₂ − b₃x̄₃ − b₄x̄₄.</div></div>
+      <div class="step"><div class="step-num">5</div><div>R² = 1 − |R|/R₁₁. This is the efficacy measure.</div></div>
+      <br>
+      <strong>(c) Comparison:</strong> Higher R² = more efficient equation. If R²(b) > R²(a), log-linear is better.
+      <br><br>
+      <strong>(d) Total correlation r₁₂:</strong>
+      <div class="math-block">r₁₂ = s₁₂/(s₁s₂)   [direct formula]</div>
+      <strong>(e) Partial correlation r₁₂.₃₄:</strong>
+      <div class="math-block">r₁₂.₃₄ = −R₁₂/√(R₁₁·R₂₂)
+where R₁₂ = cofactor of r₁₂ in R,  R₁₁ = cofactor of r₁₁,  R₂₂ = cofactor of r₂₂</div>
+      <strong>(f) Comment:</strong> Compare r₁₂ (ignores x₃, x₄) with r₁₂.₃₄ (eliminates x₃, x₄). If very different, x₃ and/or x₄ are confounders. If r₁₂ ≠ 0 but r₁₂.₃₄ ≈ 0, the simple correlation is spurious.
+
+      <div class="callout"><strong>Context:</strong> We'd expect the demand for chicken (x₁) to be negatively related to chicken price (x₂) — but this might be confounded by income (x₄) and fish price (x₃). Partial correlation isolates the pure price effect.</div>
+    </div>
+  </div>
+
+  <div class="block block-example">
+    <div class="block-label">✏️ Related Numerical Results from Notes (similar dataset)</div>
+    <div class="block-body">
+      <div class="math-block">Linear:      R² = 0.6911 → 69% explained
+Log-linear:  R² = 0.9063 → 90% explained (more efficient)
+
+r₁₂ = −0.748         (simple correlation: negative, as expected)
+r₁₂.₃₄ = −0.794      (partial correlation: slightly more negative after controlling x₃, x₄)
+→ x₃ and x₄ introduce slight masking of the true negative relationship</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="ps2">
+  <div class="unit-header">
+    <span class="unit-number">25</span>
+    <span class="unit-title">Problem Set 2 — Multinomial Distribution <span class="tag tag-new">New</span></span>
+  </div>
+
+  <div class="block block-notes">
+    <div class="block-label">📓 Problem Statements (Multinomial_Distribution.docx)</div>
+    <div class="block-body">
+      <strong>Q1.</strong> 10 distinguishable balls distributed at random over 4 cells (each cell can receive any number). Xᵢ = number of balls in cell i (i=1,2,3,4). Find:
+      <ul>
+        <li>(i) P{X₁=1, X₂=2, X₃=3, X₄=4}</li>
+        <li>(ii) Expectation and variance of balls in cell 1 when X₂=2, X₃=3</li>
+        <li>(iii) Partial correlation coefficient between X₁ and X₂ eliminating X₃, X₄</li>
+      </ul>
+
+      <strong>Q2.</strong> A die with probabilities p₁=0.10, p₂=0.30, p₃=0.25, p₄=0.20, p₅=0.09, p₆=0.06 is thrown 20 times. Let fᵢ = number of occurrences of face i. Find:
+      <ul>
+        <li>Correlation coefficient between f₂ and f₅, and partial correlation between f₂ and f₅ eliminating f₁ and f₃.</li>
+        <li>Conditional variance of f₂ when f₁=3, f₃=3, f₄=3, f₅=3 (i.e., fᵢ=3 for i=1,3,4,5).</li>
+      </ul>
+
+      <strong>Q3.</strong> A document has 10 words, each classified as positive (p=0.4), neutral (p=0.3), or negative (p=0.3). Find:
+      <ul>
+        <li>P(4 positive, 3 neutral, 3 negative)</li>
+        <li>Expected number and variance of positive words</li>
+        <li>Covariance between positive and neutral word counts</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block block-problem">
+    <div class="block-label">✏️ Complete Solutions</div>
+    <div class="block-body">
+      <strong>Q1 Setup:</strong> Each ball goes into any of 4 cells equally likely → p₁=p₂=p₃=p₄=1/4. n=10. (X₁,X₂,X₃,X₄) ~ Multinomial(10, 1/4, 1/4, 1/4, 1/4).
+
+      <strong>Q1(i):</strong>
+      <div class="math-block">P{X₁=1,X₂=2,X₃=3,X₄=4} = 10! / (1!·2!·3!·4!) · (1/4)¹·(1/4)²·(1/4)³·(1/4)⁴
+
+= 3628800 / (1·2·6·24) · (1/4)^10
+
+= 3628800 / 288 · 1/1048576
+
+= 12600 / 1048576
+
+≈ 0.01202</div>
+
+      <strong>Q1(ii):</strong> Given X₂=2, X₃=3 (so x₂+x₃=5 balls assigned to cells 2,3). Remaining n−x₂−x₃ = 10−2−3 = 5 balls go into cells 1 and 4.
+      <div class="math-block">By Property 3: X₁|X₂=2,X₃=3 ~ Binomial(5, p₁*)
+where p₁* = p₁/(1−p₂−p₃) = (1/4)/(1−1/4−1/4) = (1/4)/(1/2) = 1/2
+
+E(X₁|X₂=2,X₃=3) = 5 · (1/2) = 2.5
+
+V(X₁|X₂=2,X₃=3) = 5 · (1/2) · (1/2) = 1.25</div>
+
+      <strong>Q1(iii):</strong> Partial correlation r₁₂.₃₄ using Multinomial formula:
+      <div class="math-block">ρ₁₂.₃₄…k = −√(p₁p₂) / [√(1−p₁−p₃−p₄) · √(1−p₂−p₃−p₄)]
+
+= −√(1/4 · 1/4) / [√(1−1/4−1/4−1/4) · √(1−1/4−1/4−1/4)]
+
+= −(1/4) / [√(1/4) · √(1/4)]
+
+= −(1/4) / (1/4) = −1</div>
+      This means X₁ and X₂ are perfectly negatively correlated after removing X₃ and X₄ effects. (Makes sense — if 3 cells are fixed, the 4th is completely determined.)
+
+      <hr style="margin:1rem 0; border:1px dashed #ccc">
+
+      <strong>Q2 Setup:</strong> (f₁,f₂,f₃,f₄,f₅,f₆) ~ Multinomial(20; 0.10,0.30,0.25,0.20,0.09,0.06). n=20.
+
+      <strong>Correlation between f₂ and f₅:</strong>
+      <div class="math-block">Cov(f₂,f₅) = −n·p₂·p₅ = −20·0.30·0.09 = −0.54
+V(f₂) = n·p₂·(1−p₂) = 20·0.30·0.70 = 4.2
+V(f₅) = n·p₅·(1−p₅) = 20·0.09·0.91 = 1.638
+
+r₂₅ = −0.54 / √(4.2·1.638) = −0.54 / √6.8796 = −0.54 / 2.6230 ≈ −0.206</div>
+
+      <strong>Partial correlation r₂₅ eliminating f₁ and f₃:</strong>
+      <div class="math-block">ρ₂₅.₁₃₄₆ = −√(p₂p₅) / [√(1−p₂−p₁−p₃) · √(1−p₅−p₁−p₃)]
+
+= −√(0.30·0.09) / [√(1−0.30−0.10−0.25) · √(1−0.09−0.10−0.25)]
+
+= −√(0.027) / [√(0.35) · √(0.56)]
+
+= −0.1643 / [0.5916 · 0.7483]
+
+= −0.1643 / 0.4427 ≈ −0.371</div>
+
+      <strong>Conditional variance of f₂ given f₁=3, f₃=3, f₄=3, f₅=3:</strong>
+      <div class="math-block">Fixed: f₁+f₃+f₄+f₅ = 3+3+3+3 = 12 balls used.
+Remaining: n − 12 = 20 − 12 = 8 balls for f₂ and f₆.
+
+p₂* = p₂/(1−p₁−p₃−p₄−p₅) = 0.30/(1−0.10−0.25−0.20−0.09) = 0.30/0.36 ≈ 0.8333
+
+f₂|given ~ Binomial(8, 0.8333)
+
+V(f₂|f₁=3,f₃=3,f₄=3,f₅=3) = 8 · 0.8333 · (1−0.8333) 
+                              = 8 · 0.8333 · 0.1667 ≈ 1.111</div>
+
+      <hr style="margin:1rem 0; border:1px dashed #ccc">
+
+      <strong>Q3 Setup:</strong> n=10 words, p₁=0.4 (positive), p₂=0.3 (neutral), p₃=0.3 (negative). Let X=positive, Y=neutral, Z=negative. (X,Y,Z) ~ Trinomial(10; 0.4, 0.3, 0.3).
+
+      <strong>(i) P(X=4, Y=3, Z=3):</strong>
+      <div class="math-block">P = 10!/(4!3!3!) · (0.4)⁴ · (0.3)³ · (0.3)³
+  = [3628800/(24·6·6)] · 0.0256 · 0.027 · 0.027
+  = 4200 · 0.0256 · 0.000729
+  = 4200 · 0.00001866...
+  ≈ 0.07840</div>
+
+      <strong>(ii) E(X) and V(X):</strong>
+      <div class="math-block">By Property 1: X ~ Binomial(10, 0.4)
+E(X) = n·p = 10·0.4 = 4
+V(X) = n·p·(1−p) = 10·0.4·0.6 = 2.4</div>
+
+      <strong>(iii) Cov(X, Y):</strong>
+      <div class="math-block">By Property 6: Cov(X,Y) = −n·p₁·p₂ = −10·0.4·0.3 = −1.2
+
+(Negative: more positive words → fewer neutral words, since total = 10)</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- COMBINED NUMERICAL RESULTS FROM HANDWRITTEN NOTES -->
+<section class="unit" id="numerical">
+  <div class="unit-header">
+    <span class="unit-number">26</span>
+    <span class="unit-title">All Numerical Results from Handwritten Notes</span>
+  </div>
+
+  <div class="block block-example">
+    <div class="block-label">✏️ Pearson Residual — Full Calculation</div>
+    <div class="block-body">
+      Contingency table: Treatment vs Age (Young/Old), n=100.
+      <table>
+        <tr><th></th><th>Young</th><th>Old</th><th>Total</th></tr>
+        <tr><td>Treatment</td><td>30 (Obs)</td><td>20 (Obs)</td><td>50</td></tr>
+        <tr><td>Placebo</td><td>10 (Obs)</td><td>40 (Obs)</td><td>50</td></tr>
+        <tr><td>Total</td><td>40</td><td>60</td><td>100</td></tr>
+      </table>
+      <div class="math-block">Expected = (Row Total × Col Total) / n
+E(T,Y) = 50×40/100 = 20,   E(T,O) = 50×60/100 = 30
+E(P,Y) = 50×40/100 = 20,   E(P,O) = 50×60/100 = 30
+
+Pearson Residuals = (O−E)/√E:
+(T,Y): (30−20)/√20 =  10/4.47 ≈ +2.24
+(T,O): (20−30)/√30 = −10/5.48 ≈ −1.83
+(P,Y): (10−20)/√20 = −10/4.47 ≈ −2.24
+(P,O): (40−30)/√30 =  10/5.48 ≈ +1.83
+
+χ² = 2.24² + 1.83² + 2.24² + 1.83² = 5.018 + 3.349 + 5.018 + 3.349 = 16.73</div>
+    </div>
+  </div>
+
+  <div class="block block-example">
+    <div class="block-label">✏️ Iris Dataset — All Results</div>
+    <div class="block-body">
+      Variables: X₁=Sepal length, X₂=Sepal width, X₃=Petal length, X₄=Petal width.
+      <div class="math-block">Linear regression:
+  X₁.₂₃₄ = 1.856 + 0.65084·X₂ + 0.70913·X₃ − 0.55648·X₄
+  R² = 0.8586  →  85% explained
+
+Log-linear regression:
+  X₁.₂₃₄ = 1.3263 + 2.1734·log X₂ + 1.7634·log X₃ − 0.2210·log X₄
+  R² = 0.7953  →  79% explained  (LINEAR is more efficient)
+
+Simple correlation:  r₁₂ = −0.1175   Cov(X₁,X₂) = −0.1175
+Partial correlation: r₁₂.₃₄ = +0.6286
+→ Taking X₃, X₄ into account introduces HIGH POSITIVE correlation between X₁ and X₂
+   (the common petal variables were masking the sepal relationship)</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-div">
+
+<!-- ══════════════════════════════════════════════ -->
+<section class="unit" id="qr">
+  <div class="unit-header">
+    <span class="unit-number">★</span>
+    <span class="unit-title">Quick Reference — All Essential Formulas</span>
+  </div>
+
+  <div class="block block-prop">
+    <div class="block-label">📋 Complete Formula Sheet</div>
+    <div class="block-body">
+      <table>
+        <tr><th>Concept</th><th>Formula / Definition</th></tr>
+        <tr><td>Sample mean</td><td>x̄ᵢ = (1/n)Σα xᵢα</td></tr>
+        <tr><td>Sample variance</td><td>sᵢ² = (1/n)Σα(xᵢα−x̄ᵢ)²</td></tr>
+        <tr><td>Sample covariance</td><td>sᵢⱼ = (1/n)Σα(xᵢα−x̄ᵢ)(xⱼα−x̄ⱼ)</td></tr>
+        <tr><td>Correlation coefficient</td><td>rᵢⱼ = sᵢⱼ/(sᵢsⱼ)</td></tr>
+        <tr><td>Regression coefficients</td><td>bⱼ = −(R₁ⱼ/R₁₁)·(s₁/sⱼ),  j=2,…,p</td></tr>
+        <tr><td>Regression intercept</td><td>b₀ = x̄₁ − b₂x̄₂ − ⋯ − bₚx̄ₚ</td></tr>
+        <tr><td>V(fitted values)</td><td>V(X₁.₂₃…ₚ) = (1 − |R|/R₁₁)·s₁²</td></tr>
+        <tr><td>V(residuals)</td><td>V(x₁.₂₃…ₚ) = (|R|/R₁₁)·s₁²</td></tr>
+        <tr><td>Multiple correlation</td><td>R₁.₂₃…ₚ = (1 − |R|/R₁₁)^(1/2)</td></tr>
+        <tr><td>Partial correlation</td><td>r₁₂.₃₄…ₚ = −R₁₂/√(R₁₁·R₂₂)</td></tr>
+        <tr><td>Spurious correlation condition</td><td>r₁₂.₃ = 0 but r₁₂ = r₁₃r₂₃ ≠ 0</td></tr>
+        <tr><td>MVN density</td><td>f(x) ∝ |Σ|^(−1/2) exp[−½(x−μ)'Σ⁻¹(x−μ)]</td></tr>
+        <tr><td>Linear transform of MVN</td><td>AX ~ Nₘ(Aμ, AΣA')</td></tr>
+        <tr><td>Conditional mean (MVN)</td><td>μ⁽²⁾ + Σ₂₁Σ₁₁⁻¹(x⁽¹⁾ − μ⁽¹⁾)</td></tr>
+        <tr><td>Conditional variance (MVN)</td><td>Σ₂₂.₁ = Σ₂₂ − Σ₂₁Σ₁₁⁻¹Σ₁₂</td></tr>
+        <tr><td>MVN independence condition</td><td>X⁽¹⁾ ⊥ X⁽²⁾ ⟺ Σ₁₂ = 0</td></tr>
+        <tr><td>Multinomial Cov</td><td>Cov(Xᵢ,Xⱼ) = −npᵢpⱼ  (i≠j)</td></tr>
+        <tr><td>Multinomial conditional prob</td><td>p₁* = p₁/(1 − Σᵢ₌₂ᵏ pᵢ)</td></tr>
+        <tr><td>Multinomial multiple corr.</td><td>ρ₁.₂₃…k = √[(p₁*−p₁)/(1−p₁)]</td></tr>
+        <tr><td>Multinomial partial corr.</td><td>ρ₁₂.₃₄…k = −√(p₁p₂)/[√(1−p₁−rest)·√(1−p₂−rest)]</td></tr>
+        <tr><td>Wishart MLE</td><td>Σ̂ = A/n;  A = nΣ̂ ~ Wₚ(Σ, n−1)</td></tr>
+        <tr><td>Hotelling T²</td><td>T²(p,m) = [mp/(m−p+1)]·F_{p,m−p+1}</td></tr>
+        <tr><td>Pearson Residual</td><td>(Observed − Expected)/√Expected</td></tr>
+        <tr><td>Expected frequency</td><td>E = (Row Total × Col Total)/Grand Total</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="block block-viz">
+    <div class="block-label">📊 Visualization Techniques — At a Glance</div>
+    <div class="block-body">
+      <table>
+        <tr><th>Technique</th><th>Data Type</th><th>Best For</th></tr>
+        <tr><td>Mosaic Plot</td><td>Categorical</td><td>Contingency tables, association between categories, Pearson residuals</td></tr>
+        <tr><td>Scatterplot Matrix (SPLOM)</td><td>Continuous</td><td>All pairwise correlations, outliers, clusters in one view</td></tr>
+        <tr><td>Bivariate Q-Q Plot</td><td>Continuous</td><td>Comparing two distributions, checking normality, detecting outliers</td></tr>
+        <tr><td>Spider / Radar Chart</td><td>Multivariate quantitative</td><td>Comparing profiles across multiple normalized dimensions</td></tr>
+        <tr><td>DD Plot</td><td>Multivariate (any)</td><td>Nonparametric comparison of two multivariate datasets</td></tr>
+        <tr><td>Parallel Coordinates</td><td>Multivariate continuous</td><td>High-dimensional data, cluster detection, correlation patterns</td></tr>
+        <tr><td>Trellis Display</td><td>Any (subgroups)</td><td>Comparing the same chart across many subgroups simultaneously</td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  Complete Multivariate Analysis Study Guide &nbsp;·&nbsp; 
+  Sources: Handwritten Notes (7/1/26, 4/2/26, 6/2/26) + Note_13_01_26 + Note_19_01_26 + Recapitulation of Multivariate Descriptive Statistics + Multinomial Problem Set + Multivariate Problem Set 1
+</footer>
+
+</body>
+</html>
